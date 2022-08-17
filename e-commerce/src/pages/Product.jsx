@@ -1,5 +1,7 @@
 import { Remove, Add } from "@material-ui/icons";
-
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { publicRequest } from "../requestMethods";
 
 import styled from "styled-components"
 import Announcement from "../components/Announcement"
@@ -7,6 +9,8 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import Newsletter from "../components/Newsletter"
 import { mobile } from "../responsive";
+import { addProduct } from "../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
 
@@ -41,11 +45,11 @@ const Title = styled.h1`
 `
 
 const Desc = styled.p`
-    margin: 20px 0;
+    margin: 40px 0;
 `
 const Price = styled.span`
     font-weight: 100;
-    font-size: 14px;
+    font-size: 40px;
 `
 
 const FilterContainer = styled.div`
@@ -127,35 +131,74 @@ const Button = styled.button`
 
 
 const Product = () => {
+
+    const location = useLocation();
+    const id = location.pathname.split("/")[2]
+
+    const [product, setProduct] = useState({})
+
+    const [quantity, setQuantity] = useState(1)
+
+    const [color, setColor] = useState("")
+    const [size, setSize] = useState("")
+
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        const getProduct = async () =>{
+            try{
+                const res = await publicRequest.get("/products/find/"+id)
+                setProduct(res.data)
+            }catch{}
+        }
+        getProduct()
+    })
+
+
+    const handelQuantity = (type) =>{
+        if (type === "dec"){
+            quantity > 1 && setQuantity(quantity - 1)
+        }else {
+            setQuantity(quantity + 1)
+        }
+    }
+
+
+
+    const handelClick = ()=>{
+        // update cart
+        dispatch(
+            addProduct({...product, quantity, color, size})
+        )
+    }
     return (
         <Container>
             <Navbar/>
             <Announcement/>
             <Wrapper>
                 <ImageContainer>
-                    <Image src="./images/cce7806cc64bff5b8825d3244adc09af.jpg"/>
+                    <Image src={product.img}/>
                 </ImageContainer>
                 <InfoContainer>
-                    <Title>Man Jeans</Title>
-                    <Desc>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam porro voluptatibus amet sit.
-                            Cumque in accusantium corporis odit nobis? Distinctio?</Desc>
-                    <Price> $ 20</Price>
+                    <Title>{product.title}</Title>
+                    <Desc>{product.desc}</Desc>
+                    <Price>$ {product.price}</Price>
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
-                            <FilterColor color= "black"/>
-                            <FilterColor color= "darkblue"/>
-                            <FilterColor color= "gray"/>
+                            {product.color?.map((c)=>(
+                                <FilterColor color= {c} key = {c} onClick={()=> setColor(c)}/>
+                            ))}
+
                         </Filter>
                         <Filter>
                             <FilterTitle>Size</FilterTitle>
-                            <FilterSize>
-                                <FilterSizeOption>XS</FilterSizeOption>
-                                <FilterSizeOption>S</FilterSizeOption>
-                                <FilterSizeOption>M</FilterSizeOption>
-                                <FilterSizeOption>L</FilterSizeOption>
-                                <FilterSizeOption>XL</FilterSizeOption>
-                                <FilterSizeOption>XXL</FilterSizeOption>
+                            <FilterSize onChange={(e)=> setSize (e.target.value)}>
+                                {product.size?.map((s)=>(
+                                    <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                                ))}
+                                
+
                             </FilterSize>
                         </Filter>
                     </FilterContainer>
@@ -163,11 +206,11 @@ const Product = () => {
                     <AddContainer>
 
                         <AmountContainer>
-                            <Remove/>
-                            <Amount>1</Amount>
-                            <Add/>
+                            <Remove onClick = {()=> handelQuantity("dec")}/>
+                            <Amount>{quantity}</Amount>
+                            <Add onClick = {()=> handelQuantity("inc")}/>
                         </AmountContainer>
-                        <Button>ADD TO CART</Button>
+                        <Button onClick={handelClick}>ADD TO CART</Button>
                     </AddContainer>
                 </InfoContainer>
             </Wrapper>

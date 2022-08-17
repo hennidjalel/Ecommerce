@@ -33,16 +33,19 @@ export const categories = [
         id: 1,
         img: './images/ian-dooley-TT-ROxWj9nA-unsplash.jpg',
         title: "SHIRTS STYLE!",
+        cat: "women"
     },
     {
         id: 2,
         img: './images/pexels-azraq-al-rezoan-11763862.jpg',
         title: "LOUNGEWEAR LOVE  ",
+        cat: "coet"
     },
     {
         id: 3,
         img: './images/pexels-mart-production-7679684.jpg',
         title: "LIGHT JACKET",
+        cat: "jeans"
     }
 ];
 

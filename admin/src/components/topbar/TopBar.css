@@ -1,0 +1,59 @@
+.topbar{
+    width: 100%;
+    height: 50px;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+.topbar-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 100%;
+}
+
+.logo{
+    font-size: 30px;
+    font-weight: bold;
+    color: darkblue;
+    cursor: pointer ;
+}
+
+.topbar_right{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar-icons-container{
+    position: relative;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #555;
+}
+
+.icon-badge{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    color: white;
+    font-size: 13px;
+}
+
+.topbar-avatar{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
