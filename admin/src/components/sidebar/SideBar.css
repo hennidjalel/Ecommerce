@@ -10,7 +10,10 @@
     padding: 20px;
 }
 
-
+.link{
+    text-decoration: none;
+    color: inherit;
+}
 
 .sidebarTitle{
     font-size: 13px;

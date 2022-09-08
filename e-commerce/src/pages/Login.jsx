@@ -79,16 +79,15 @@ const StyledLink = styled.a`
 const Login = () => {
     const user = localStorage.getItem("user");
 
-
     const navigate = useNavigate();
     useEffect(() => {
-        if (!user) navigate('/login');
+        if (user) navigate('/');
     }, []);
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const dispatch = useDispatch()
-    const {isFetching, error} = useSelector((state)=> state.user)
+    const { isFetching, error } = useSelector((state) => state.user)
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -111,9 +110,9 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>
-                        {error && 
-                        <Error> Something went wrong...</Error>}
-                            
+                        {error &&
+                            <Error> Something went wrong...</Error>}
+
                         <Link to={"/"}><StyledLink>Forgot Password?</StyledLink> </Link>
                         <Link to={"/register"}><StyledLink>CREATE A NEW ACCOUNT</StyledLink></Link>
                     </Form>
