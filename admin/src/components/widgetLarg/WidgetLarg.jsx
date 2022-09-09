@@ -1,66 +1,54 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import { userRequest } from "../../requestMethodes";
 import "./WidgetLarg.css";
+import { format } from "timeago.js"
+
 
 export default function WidgetLarg() {
-    const Button = ({type})=>{
+
+    const [orders, setOrders] = useState([])
+
+    useEffect(() => {
+        const getOrders = async () => {
+            try {
+                const res = await userRequest.get("orders")
+                setOrders(res.data)
+            }
+            catch { console.log("errrreuuuur") }
+        };
+        getOrders();
+    }, [])
+
+
+
+    const Button = ({ type }) => {
         return <button className={"widgetlargButton " + type}>{type}</button>
     }
     return (
         <div className='widgetlarg'>
             <h3 className="widgetlargTitle">Latest transactions</h3>
             <table className="widgetlargTable">
-                <tr className="widgetlargTr">
-                    <th className="widgetlargTh">Customer</th>
-                    <th className="widgetlargTh">Date</th>
-                    <th className="widgetlargTh">Amount</th>
-                    <th className="widgetlargTh">Status</th>
-                </tr>
-                <tr className="widgetlargTr">
-                    <td className="widgetlargUser">
-                        <img src="https://i.ibb.co/yg1MRtc/vince-veras-AJIq-ZDAUD7-A-unsplash.jpg" alt="" className="widgetlargImg" />
-                        <span className="widgetlargName">Khaled Halloua</span>
-                    </td>
-                    <td className="widgetlargDate">2 jun 2022</td>
-                    <td className="widgetlargAmount">$100.00</td>
-                    <td className="widgetlargStatus">
-                        <Button type="Approved"/>
-                    </td>
-                </tr>
-
-                <tr className="widgetlargTr">
-                    <td className="widgetlargUser">
-                        <img src="https://i.ibb.co/yg1MRtc/vince-veras-AJIq-ZDAUD7-A-unsplash.jpg" alt="" className="widgetlargImg" />
-                        <span className="widgetlargName">Khaled Halloua</span>
-                    </td>
-                    <td className="widgetlargDate">2 jun 2022</td>
-                    <td className="widgetlargAmount">$100.00</td>
-                    <td className="widgetlargStatus">
-                        <Button type="Declined"/>
-                    </td>
-                </tr>
-
-                <tr className="widgetlargTr">
-                    <td className="widgetlargUser">
-                        <img src="https://i.ibb.co/yg1MRtc/vince-veras-AJIq-ZDAUD7-A-unsplash.jpg" alt="" className="widgetlargImg" />
-                        <span className="widgetlargName">Khaled Halloua</span>
-                    </td>
-                    <td className="widgetlargDate">2 jun 2022</td>
-                    <td className="widgetlargAmount">$100.00</td>
-                    <td className="widgetlargStatus">
-                        <Button type="Pending"/>
-                    </td>
-                </tr>
-
-                <tr className="widgetlargTr">
-                    <td className="widgetlargUser">
-                        <img src="https://i.ibb.co/yg1MRtc/vince-veras-AJIq-ZDAUD7-A-unsplash.jpg" alt="" className="widgetlargImg" />
-                        <span className="widgetlargName">Khaled Halloua</span>
-                    </td>
-                    <td className="widgetlargDate">2 jun 2022</td>
-                    <td className="widgetlargAmount">$100.00</td>
-                    <td className="widgetlargStatus">
-                        <Button type="Approved"/>
-                    </td>
-                </tr>
+                <tbody>
+                    <tr className="widgetlargTr">
+                        <th className="widgetlargTh">Customer</th>
+                        <th className="widgetlargTh">Date</th>
+                        <th className="widgetlargTh">Amount</th>
+                        <th className="widgetlargTh">Status</th>
+                    </tr>
+                    {orders.map(order => (
+                        <tr className="widgetlargTr">
+                            <td className="widgetlargUser">
+                                <span className="widgetlargName">{order.userId}</span>
+                            </td>
+                            <td className="widgetlargDate">{format(order.createdAt)}</td>
+                            <td className="widgetlargAmount">${order.amount}</td>
+                            <td className="widgetlargStatus">
+                                <Button type={order.status} />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
         </div>
     )
